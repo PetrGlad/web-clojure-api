@@ -1,11 +1,22 @@
 # cljdb
 
 An example of restful API implementation in Clojure
-http://sqlkorma.com/
-http://webnoir.org/
+
+Similar projects 
+ https://github.com/flyingmachine/arenaverse
+
+Libraries used
+ http://sqlkorma.com/
+ http://webnoir.org/
+
+## TODO 
+
+Refacrtoring (separate data access from views).
+Integrate DB migration.
 
 ## Usage
 
+; create db
 lein run
 
 ## License
