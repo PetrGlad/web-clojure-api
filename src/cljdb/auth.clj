@@ -6,10 +6,9 @@
   (use korma.core
        [cljdb.core :only [users credentials roles users_to_roles]]))
 
-(def salt "Some salt here") 
+(def salt "Some salt here")
 
 (defn hash-password [^String plainTextPassword]
-  ; TODO Use specialized password hashing algorithm
   (Base64/encodeBase64String 
     (let [md (MessageDigest/getInstance "SHA-256")]
       (.update md (.getBytes salt))
@@ -28,24 +27,10 @@
                   (join roles (= :users_to_roles.role_id :roles.id))
                   (fields :roles.name)))))
 
-; A dummy in-memory user "database"
-(defn get-user [userName]
-  #_(let [user (select users
-                     (join users_to_roles (= :users_to_roles.user_id :users.id))
-                     (join roles (= :users_to_roles.role_id :roles.id))
-                     (fields :users.id :users.first_name :users_to_roles.role_id))]
-    
-    {:user_id 1
-                    :username "root"
-                    :password (creds/hash-bcrypt "admin_password")
-                    :roles #{::admin}}
-    ))
-
-(defn authenticate [userName password] 
-  (if-let [creds (get-credentials userName password)]
+(defn authenticate [{:keys [username password]}] 
+  (if-let [creds (get-credentials username password)]
     (let [userId (:user_id creds)
           roles (get-roles userId)]
       {:user_id userId
        :username (:name creds)
-       ; :password (creds/hash-bcrypt "admin_password")
        :roles #{::admin}})))
